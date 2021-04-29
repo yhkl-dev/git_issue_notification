@@ -20,8 +20,8 @@ func TestSendDingDingMessage(t *testing.T) {
 		{name: "yhkl",
 			args: args{
 				content:     fmtDat,
-				dingdingURL: "https://oapi.dingtalk.com/robot/send?access_token=c471ab384eee2fc8f93ff623cb771320fc34761fbff68c19a915c57515b9decd",
-				secretKey:   "SEC97a57299528ce2827345d2d20a8180209bbbfc3157eac28a5045c2b000241e38",
+				dingdingURL: "https://oapi.dingtalk.com/robot/send?access_token=ac48ccf5d20ba41b11bf6c335a0afb2567df312eac50a34fb0d31b643d3c6c89",
+				secretKey:   "SEC873c3a1ea4f0e26c391f4e294cb1a63893c47cb6023ec6381d3306f7b979e0f5",
 			},
 		},
 	}

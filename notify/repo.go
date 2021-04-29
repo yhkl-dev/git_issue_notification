@@ -7,7 +7,7 @@ import (
 
 var (
 	REPO_URL         = "https://api.github.com/user/repos?page=1&per_page=1000"
-	GITHUB_TOKEN     = "419ed57e343e23a1dae83799e497fe0392c0ef22"
+	GITHUB_TOKEN     = "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"
 	MILESTONE_URL    = "https://api.github.com/repos/%s/milestones?state=open"
 	NOTIFY_REPO_LIST = []string{
 		"YicunWendyWu/fire-risk-client",
