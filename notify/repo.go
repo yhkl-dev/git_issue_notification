@@ -24,11 +24,12 @@ func contains(repo_name string, repo_list []string) bool {
 	return false
 }
 
-func GetRepoList(url string) []string {
+func GetRepoList(url string, githubToken string) []string {
 	repoList := []string{}
-	res := HTTPRequest(url, GITHUB_TOKEN)
+	res := HTTPRequest(url, githubToken)
 	arr, err := res.Array()
 	if err != nil || arr == nil {
+		fmt.Println(err)
 		log.Fatal("something wrong when call Get and Array")
 	}
 	for _, content := range arr { //就在这里对di进行类型判断
@@ -46,7 +47,12 @@ func GetMileStoneInfo(repoName string) {
 	fmt.Println(mileStoneURL)
 }
 
-func GetLatestMilestone(repoNameList []string) {
+func GetLatestMilestone(mileStoneURL string, repoNameList []string) {
+	mileStoneList := []string{}
+	for _, repo := range repoNameList {
+		mileStoneList = append(mileStoneList, fmt.Sprintf(mileStoneURL, repo))
+	}
+	fmt.Println(mileStoneList)
 }
 
 // def get_latest_milestone(repo_name_list):

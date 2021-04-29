@@ -8,32 +8,18 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	REPO_URL     = "https://api.github.com/user/repos?page=1&per_page=1000"
-	GITHUB_TOKEN = "419ed57e343e23a1dae83799e497fe0392c0ef22"
-)
+var config Config
 
-func main() {
-	fmt.Println(`
-	 ___ ____ ____  _   _ _____ 
-	|_ _/ ___/ ___|| | | | ____|
-	 | |\___ \___ \| | | |  _|  
-	 | | ___) |__) | |_| | |___ 
-	|___|____/____/ \___/|_____|
-								
-	 _   _  ___  _____ ___ ____    _  _____ ___ ___  _   _ 
-	| \ | |/ _ \|  ___|_ _/ ___|  / \|_   _|_ _/ _ \| \ | |
-	|  \| | | | | |_   | | |     / _ \ | |  | | | | |  \| |
-	| |\  | |_| |  _|  | | |___ / ___ \| |  | | |_| | |\  |
-	|_| \_|\___/|_|   |___\____/_/   \_\_| |___\___/|_| \_|
-	
-	`)
-	res := notify.GetRepoList(REPO_URL)
-	for _, r := range res {
-		fmt.Println(r)
-		notify.GetMileStoneInfo(r)
-	}
+type Config struct {
+	DingdingURL    string
+	SIGN           string
+	RepoURL        string
+	MileStoneURL   string
+	GithubToken    string
+	NotifyRepoList []string
+}
 
+func init() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
@@ -41,7 +27,31 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("protocols: ", viper.Get("config.dingding_url"))
-	fmt.Println("protocols: ", viper.Get("config.sign"))
+	config = Config{
+		DingdingURL:    viper.GetString("config.dingding_url"),
+		SIGN:           viper.GetString("config.sign"),
+		RepoURL:        viper.GetString("config.repo_url"),
+		MileStoneURL:   viper.GetString("config.milestone_url"),
+		GithubToken:    viper.GetString("config.github_token"),
+		NotifyRepoList: viper.GetStringSlice("config.notify_repo_list"),
+	}
+}
+
+func main() {
+	fmt.Println(`
+	___ ____ ____  _   _ _____   _   _  ___  _____ ___ ____    _  _____ ___ ___  _   _ 
+	|_ _/ ___/ ___|| | | | ____| | \ | |/ _ \|  ___|_ _/ ___|  / \|_   _|_ _/ _ \| \ | |
+	 | |\___ \___ \| | | |  _|   |  \| | | | | |_   | | |     / _ \ | |  | | | | |  \| |
+	 | | ___) |__) | |_| | |___  | |\  | |_| |  _|  | | |___ / ___ \| |  | | |_| | |\  |
+	|___|____/____/ \___/|_____| |_| \_|\___/|_|   |___\____/_/   \_\_| |___\___/|_| \_|
+				  
+	`)
+
 	// notify.SendDingDingMessage("test", viper.Get("config.dingding_url").(string), viper.Get("config.sign").(string))
+	fmt.Println(config.RepoURL)
+	fmt.Println(config.GithubToken)
+	res := notify.GetRepoList(config.RepoURL, config.GithubToken)
+	for _, r := range res {
+		fmt.Println(r)
+	}
 }
