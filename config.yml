@@ -1,0 +1,3 @@
+config:
+  dingding_url: https://oapi.dingtalk.com/robot/send?access_token=c471ab384eee2fc8f93ff623cb771320fc34761fbff68c19a915c57515b9decd
+  sign: SEC97a57299528ce2827345d2d20a8180209bbbfc3157eac28a5045c2b000241e38
