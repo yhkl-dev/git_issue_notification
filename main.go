@@ -48,10 +48,11 @@ func main() {
 	`)
 
 	// notify.SendDingDingMessage("test", viper.Get("config.dingding_url").(string), viper.Get("config.sign").(string))
-	fmt.Println(config.RepoURL)
-	fmt.Println(config.GithubToken)
-	res := notify.GetRepoList(config.RepoURL, config.GithubToken)
+	github := notify.NewGithub(config.GithubToken)
+	res := github.GetRepoList(config.RepoURL, config.NotifyRepoList)
+
 	for _, r := range res {
 		fmt.Println(r)
 	}
+	github.GetLatestMilestone(config.MileStoneURL, res)
 }

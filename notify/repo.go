@@ -3,17 +3,17 @@ package notify
 import (
 	"fmt"
 	"log"
+
+	"github.com/bitly/go-simplejson"
 )
 
-var (
-	REPO_URL         = "https://api.github.com/user/repos?page=1&per_page=1000"
-	GITHUB_TOKEN     = "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"
-	MILESTONE_URL    = "https://api.github.com/repos/%s/milestones?state=open"
-	NOTIFY_REPO_LIST = []string{
-		"YicunWendyWu/fire-risk-client",
-		"YicunWendyWu/fire-inspection-client",
-	}
-)
+type Github struct {
+	GithubToken string
+}
+
+func NewGithub(githubToken string) *Github {
+	return &Github{GithubToken: githubToken}
+}
 
 func contains(repo_name string, repo_list []string) bool {
 	for _, element := range repo_list {
@@ -24,35 +24,46 @@ func contains(repo_name string, repo_list []string) bool {
 	return false
 }
 
-func GetRepoList(url string, githubToken string) []string {
+func (g *Github) GetRepoList(url string, notifyRepoList []string) []string {
 	repoList := []string{}
-	res := HTTPRequest(url, githubToken)
+	res := HTTPRequest(url, g.GithubToken)
 	arr, err := res.Array()
-	if err != nil || arr == nil {
-		fmt.Println(err)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if arr == nil {
 		log.Fatal("something wrong when call Get and Array")
 	}
-	for _, content := range arr { //就在这里对di进行类型判断
+	for _, content := range arr { 
 		newdi, _ := content.(map[string]interface{})
 		fullName := fmt.Sprintf("%s", newdi["full_name"])
-		if contains(fullName, NOTIFY_REPO_LIST) {
+		if contains(fullName, notifyRepoList) {
 			repoList = append(repoList, fullName)
 		}
 	}
 	return repoList
 }
 
-func GetMileStoneInfo(repoName string) {
-	mileStoneURL := fmt.Sprintf(MILESTONE_URL, repoName)
-	fmt.Println(mileStoneURL)
-}
-
-func GetLatestMilestone(mileStoneURL string, repoNameList []string) {
+func (g *Github) GetLatestMilestone(mileStoneURL string, repoNameList []string) {
 	mileStoneList := []string{}
 	for _, repo := range repoNameList {
 		mileStoneList = append(mileStoneList, fmt.Sprintf(mileStoneURL, repo))
 	}
-	fmt.Println(mileStoneList)
+	for _, m := range mileStoneList {
+		arr, err := g.GetMileStoneInfo(m).Array()
+		if err != nil {
+			fmt.Println(err)
+		}
+		for _, x := range arr {
+			fmt.Println(x)
+		}
+	}
+
+}
+
+func (g *Github) GetMileStoneInfo(mileStoneURL string) *simplejson.Json {
+	res := HTTPRequest(mileStoneURL, g.GithubToken)
+	return res
 }
 
 // def get_latest_milestone(repo_name_list):
