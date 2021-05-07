@@ -8,16 +8,16 @@ import (
 	"github.com/spf13/viper"
 )
 
-var config Config
-
 type Config struct {
-	DingdingURL    string
-	SIGN           string
+	DingDingURL    string
+	Sign           string
 	RepoURL        string
-	MileStoneURL   string
+	MilestoneURL   string
 	GithubToken    string
 	NotifyRepoList []string
 }
+
+var c Config
 
 func init() {
 	viper.SetConfigName("config")
@@ -27,14 +27,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	config = Config{
-		DingdingURL:    viper.GetString("config.dingding_url"),
-		SIGN:           viper.GetString("config.sign"),
-		RepoURL:        viper.GetString("config.repo_url"),
-		MileStoneURL:   viper.GetString("config.milestone_url"),
-		GithubToken:    viper.GetString("config.github_token"),
-		NotifyRepoList: viper.GetStringSlice("config.notify_repo_list"),
-	}
+	viper.Unmarshal(&c)
 }
 
 func main() {
@@ -47,12 +40,6 @@ func main() {
 				  
 	`)
 
-	// notify.SendDingDingMessage("test", viper.Get("config.dingding_url").(string), viper.Get("config.sign").(string))
-	github := notify.NewGithub(config.GithubToken)
-	res := github.GetRepoList(config.RepoURL, config.NotifyRepoList)
-
-	for _, r := range res {
-		fmt.Println(r)
-	}
-	github.GetLatestMilestone(config.MileStoneURL, res)
+	github := notify.NewGithub(c.GithubToken, c.NotifyRepoList)
+	github.Rank(c.RepoURL, c.MilestoneURL)
 }

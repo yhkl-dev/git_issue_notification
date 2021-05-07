@@ -1,9 +1,8 @@
-config:
-  dingding_url: https://oapi.dingtalk.com/robot/send?access_token=ac48ccf5d20ba41b11bf6c335a0afb2567df312eac50a34fb0d31b643d3c6c89
-  sign: SEC873c3a1ea4f0e26c391f4e294cb1a63893c47cb6023ec6381d3306f7b979e0f5
-  repo_url: https://api.github.com/user/repos?page=1&per_page=1000
-  milestone_url: https://api.github.com/repos/%s/milestones?state=open
-  github_token: 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
-  notify_repo_list: 
-    - "YicunWendyWu/fire-risk-client"
-    - "YicunWendyWu/fire-inspection-client"
+DingDingURL: https://oapi.dingtalk.com/robot/send?access_token=ac48ccf5d20ba41b11bf6c335a0afb2567df312eac50a34fb0d31b643d3c6c89
+Sign: SEC873c3a1ea4f0e26c391f4e294cb1a63893c47cb6023ec6381d3306f7b979e0f5
+RepoURL: https://api.github.com/user/repos?page=1&per_page=1000
+MilestoneURL: https://api.github.com/repos/%s/milestones?state=open&direction=asc
+GithubToken: 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
+NotifyRepoList:
+  - "YicunWendyWu/fire-inspection-client"
+  - "YicunWendyWu/fire-risk-client"
